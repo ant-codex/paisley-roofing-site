@@ -6,7 +6,7 @@
 const observerOptions = {
     root: null,
     rootMargin: '0px',
-    threshold: 0.15
+    threshold: window.innerWidth <= 768 ? 0.05 : 0.15
 };
 
 const observer = new IntersectionObserver((entries) => {
@@ -154,8 +154,9 @@ const heroContent = document.getElementById('hero-content');
 
 function animationLoop() {
     // Smooth frame transitions
+    const lerpFactor = window.innerWidth <= 768 ? 0.25 : 0.12;
     if (Math.abs(targetFrameIndex - currentFrameIndex) > 0.05) {
-        currentFrameIndex += (targetFrameIndex - currentFrameIndex) * 0.12; 
+        currentFrameIndex += (targetFrameIndex - currentFrameIndex) * lerpFactor; 
         render(Math.round(currentFrameIndex));
     } else if (currentFrameIndex !== targetFrameIndex) {
         currentFrameIndex = targetFrameIndex;
@@ -164,7 +165,7 @@ function animationLoop() {
 
     // Smooth text parallax/fade
     if (Math.abs(targetScrollFraction - currentScrollFraction) > 0.001) {
-        currentScrollFraction += (targetScrollFraction - currentScrollFraction) * 0.12;
+        currentScrollFraction += (targetScrollFraction - currentScrollFraction) * lerpFactor;
         if (heroContent) {
             heroContent.style.transform = `translateY(${currentScrollFraction * -20}%) scale(${1 - currentScrollFraction * 0.05})`;
             heroContent.style.opacity = 1 - (currentScrollFraction * 1.8);
@@ -195,9 +196,8 @@ function adjustHeroForMobile() {
     const stickyContainer = document.querySelector('.hero-sticky-container');
     if (!stickyContainer) return;
     if (window.innerWidth <= 768) {
-        // On mobile, we want minimal scroll-scrub (just enough to see some animation)
-        // then reveal content immediately — set to 120vh total
-        stickyContainer.style.height = '120vh';
+        // One-swipe exit on mobile: 102vh total
+        stickyContainer.style.height = '102vh';
     } else {
         stickyContainer.style.height = '250vh';
     }
@@ -241,8 +241,16 @@ function onYouTubeIframeAPIReady() {
         },
         events: {
             'onReady': (event) => {
-                event.target.playVideo();
                 event.target.mute();
+                event.target.playVideo();
+                // Ensure it plays even if restricted
+                const playPromise = event.target.playVideo();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        // Retry on interaction if needed (though muted usually works)
+                        console.log("Autoplay blocked, waiting for interaction");
+                    });
+                }
             }
         }
     });
@@ -262,8 +270,8 @@ function onYouTubeIframeAPIReady() {
         },
         events: {
             'onReady': (event) => {
-                event.target.playVideo();
                 event.target.mute();
+                event.target.playVideo();
             }
         }
     });

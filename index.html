@@ -409,11 +409,11 @@
     <!-- Navigation -->
     <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-6 px-6 lg:px-12">
         <div class="max-w-[1600px] mx-auto flex justify-between items-center text-white">
-            <a href="#" class="flex-shrink-0">
-                <img src="https://www.paisleyroofing.co.uk/wp-content/uploads/2023/10/Paisley-Roofing-Logo-Transparent.png" 
-                     alt="Paisley Roofing" 
-                     id="nav-logo"
-                     class="h-10 w-auto brightness-0 invert block transition-all">
+            <a href="#" class="flex-shrink-0 group">
+                <div class="logo-text text-white group-hover:opacity-80 transition-all font-black tracking-tighter" id="nav-logo-text">
+                    <span class="block">PAISLEY</span>
+                    <span class="block -mt-1 opacity-90 text-[0.8em] font-medium tracking-tight">ROOFING SHEFFIELD</span>
+                </div>
             </a>
             
             <div class="hidden md:flex items-center gap-10">
@@ -435,8 +435,10 @@
     <div id="mobile-menu-overlay" class="fixed inset-0 z-[200] flex flex-col" 
          style="background:rgba(10,10,10,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);opacity:0;pointer-events:none;transition:opacity 0.4s ease;overflow:hidden;">
         <div class="flex justify-between items-center px-6 pt-6 pb-4 shrink-0">
-            <img src="https://www.paisleyroofing.co.uk/wp-content/uploads/2023/10/Paisley-Roofing-Logo-Transparent.png" 
-                 alt="Paisley Roofing" class="h-9 w-auto brightness-0 invert" style="max-width:120px;object-fit:contain;">
+            <div class="logo-text text-white font-black tracking-tighter text-xl">
+                <span class="block">PAISLEY</span>
+                <span class="block -mt-1 opacity-90 text-[0.7em] font-medium tracking-tight">ROOFING SHEFFIELD</span>
+            </div>
             <button onclick="toggleMobileMenu()" class="text-white p-2" aria-label="Close menu">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <line x1="18" y1="6" x2="6" y2="18"></line>

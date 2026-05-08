@@ -115,23 +115,26 @@ for (let i = 1; i <= frameCount; i++) {
 
 function render(frameIndex) {
     const img = images[frameIndex - 1];
-    if(img && img.complete && img.naturalHeight !== 0 && canvas) {
+    if(img && img.complete && img.naturalHeight !== 0 && canvas && context) {
+        // Use physical pixels for rendering
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        
+        // Object-fit: cover logic
+        const scale = Math.max(canvasWidth / img.naturalWidth, canvasHeight / img.naturalHeight);
+        
+        const drawWidth = img.naturalWidth * scale;
+        const drawHeight = img.naturalHeight * scale;
+        
+        const x = Math.floor((canvasWidth - drawWidth) / 2);
+        const y = Math.floor((canvasHeight - drawHeight) / 2);
+        
+        // Force high-fidelity rendering
         context.imageSmoothingEnabled = true;
         context.imageSmoothingQuality = 'high';
         
-        const dpr = window.devicePixelRatio || 1;
-        const hRatio = canvas.width / (img.width * dpr);
-        const vRatio = canvas.height / (img.height * dpr);
-        const ratio = Math.max(hRatio, vRatio);
-        
-        const drawWidth = img.width * ratio * dpr;
-        const drawHeight = img.height * ratio * dpr;
-        const centerShift_x = (canvas.width - drawWidth) / 2;
-        const centerShift_y = (canvas.height - drawHeight) / 2;  
-        
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(img, 0, 0, img.width, img.height,
-                            centerShift_x, centerShift_y, drawWidth, drawHeight);  
+        context.clearRect(0, 0, canvasWidth, canvasHeight);
+        context.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, x, y, drawWidth, drawHeight);
     }
 }
 
@@ -189,6 +192,9 @@ function resizeCanvas() {
     canvas.style.width = window.innerWidth + 'px';
     canvas.style.height = window.innerHeight + 'px';
     updateHeroAnimation();
+    if (typeof currentFrameIndex !== 'undefined') {
+        render(Math.round(currentFrameIndex));
+    }
 }
 
 window.addEventListener('resize', resizeCanvas);

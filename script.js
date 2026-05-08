@@ -116,6 +116,9 @@ for (let i = 1; i <= frameCount; i++) {
 function render(frameIndex) {
     const img = images[frameIndex - 1];
     if(img && img.complete && img.naturalHeight !== 0 && canvas) {
+        context.imageSmoothingEnabled = true;
+        context.imageSmoothingQuality = 'high';
+        
         const dpr = window.devicePixelRatio || 1;
         const hRatio = canvas.width / (img.width * dpr);
         const vRatio = canvas.height / (img.height * dpr);
